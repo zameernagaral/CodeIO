@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - CodeHub College Coding Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .calendar-day {
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .event-dot {
+            width: 6px;
+            height: 6px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Hero Section -->
+    <section class="relative gradient-bg text-white overflow-hidden py-24 px-6">
+        <div class="blob w-96 h-96 bg-purple-400 top-0 right-0"></div>
+        <div class="blob w-80 h-80 bg-indigo-400 bottom-0 left-0"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+                    What's Happening at CodeHub
+                </h1>
+                <p class="text-xl md:text-2xl text-purple-100 mb-8 max-w-3xl mx-auto">
+                    Where innovation meets collaboration. Join us for workshops, hackathons, and coding sessions that transform ideas into reality.
+                </p>
+                <div class="flex gap-4 justify-center flex-wrap">
+                    <a href="#upcoming" class="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold hover:bg-purple-50 transition">
+                        View Upcoming Events
+                    </a>
+                    <a href="#calendar" class="border-2 border-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition">
+                        Event Calendar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section id="upcoming" class="py-20 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="gradient-text">Upcoming Events</span>
+                </h2>
+                <p class="text-gray-600 text-lg">Don't miss out on these amazing opportunities to learn and grow</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Event Card 1 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2"></div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <i class="far fa-calendar"></i>
+                            <span>Dec 15, 2024 • 6:00 PM</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-gray-800">AI/ML Workshop Series - Part 1</h3>
+                        <p class="text-gray-600 mb-4">Kickstart your AI journey with hands-on machine learning fundamentals. Build your first ML model from scratch.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-sm text-gray-700 mb-2">You'll Learn:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Python for ML basics</li>
+                                <li>• Data preprocessing techniques</li>
+                                <li>• Building classification models</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fas fa-map-marker-alt mr-1"></i> Lab 204
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <i class="fas fa-users mr-1"></i> 45 seats left
+                            </span>
+                        </div>
+                        
+                        <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition">
+                            Register Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
+                    <div class="bg-gradient-to-r from-green-500 to-teal-600 h-2"></div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <i class="far fa-calendar"></i>
+                            <span>Dec 20, 2024 • 5:00 PM</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-gray-800">CodeSprint Challenge</h3>
+                        <p class="text-gray-600 mb-4">Test your competitive programming skills in this intense 3-hour coding competition with exciting prizes.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-sm text-gray-700 mb-2">You'll Learn:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Advanced algorithms</li>
+                                <li>• Time optimization techniques</li>
+                                <li>• Problem-solving strategies</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fas fa-laptop mr-1"></i> Online
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <i class="fas fa-trophy mr-1"></i> Prizes worth ₹20K
+                            </span>
+                        </div>
+                        
+                        <button class="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition">
+                            Register Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
+                    <div class="bg-gradient-to-r from-orange-500 to-red-600 h-2"></div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <i class="far fa-calendar"></i>
+                            <span>Jan 5-7, 2025 • 48 Hours</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-gray-800">HackFest 2025</h3>
+                        <p class="text-gray-600 mb-4">Our flagship 48-hour hackathon. Build innovative solutions, network with industry experts, and win amazing prizes.</p>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-sm text-gray-700 mb-2">You'll Learn:</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Full-stack development</li>
+                                <li>• Team collaboration</li>
+                                <li>• Pitch presentations</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fas fa-building mr-1"></i> Campus Auditorium
+                            </span>
+                            <span class="text-gray-500 text-sm">
+                                <i class="fas fa-trophy mr-1"></i> Prizes worth ₹1L
+                            </span>
+                        </div>
+                        
+                        <button class="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition">
+                            Register Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flagship Events Section -->
+    <section class="py-20 px-6 bg-gradient-to-br from-purple-50 to-indigo-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="gradient-text">Flagship Events</span>
+                </h2>
+                <p class="text-gray-600 text-lg">Our signature events that define the year</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Flagship Event 1 -->
+                <div class="bg-white rounded-3xl p-8 shadow-xl card-hover">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-rocket text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4 text-gray-800">TechSummit Annual Fest</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Our biggest tech extravaganza featuring guest lectures from industry leaders, multiple competition tracks, workshops, and networking sessions. Over 500 participants from 20+ colleges compete across web dev, app dev, AI/ML, and cybersecurity domains.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="text-center p-4 bg-purple-50 rounded-xl">
+                            <div class="text-3xl font-bold text-purple-600">500+</div>
+                            <div class="text-sm text-gray-600">Participants</div>
+                        </div>
+                        <div class="text-center p-4 bg-indigo-50 rounded-xl">
+                            <div class="text-3xl font-bold text-indigo-600">₹5L+</div>
+                            <div class="text-sm text-gray-600">Prize Pool</div>
+                        </div>
+                    </div>
+                    <div class="bg-purple-100 border-l-4 border-purple-600 p-4 rounded-r-xl">
+                        <p class="text-purple-800 font-medium">
+                            <i class="fas fa-lightbulb mr-2"></i>
+                            Why it matters: Our largest networking opportunity connecting students with tech giants and startups.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Flagship Event 2 -->
+                <div class="bg-white rounded-3xl p-8 shadow-xl card-hover">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-code text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4 text-gray-800">CodeWars Championship</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        An intensive competitive programming contest series running throughout the semester. Weekly challenges building up to the grand finale. Sharpen your DSA skills, compete on leaderboards, and earn recognition as the ultimate problem solver.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="text-center p-4 bg-green-50 rounded-xl">
+                            <div class="text-3xl font-bold text-green-600">12</div>
+                            <div class="text-sm text-gray-600">Weekly Rounds</div>
+                        </div>
+                        <div class="text-center p-4 bg-teal-50 rounded-xl">
+                            <div class="text-3xl font-bold text-teal-600">300+</div>
+                            <div class="text-sm text-gray-600">Competitors</div>
+                        </div>
+                    </div>
+                    <div class="bg-green-100 border-l-4 border-green-600 p-4 rounded-r-xl">
+                        <p class="text-green-800 font-medium">
+                            <i class="fas fa-lightbulb mr-2"></i>
+                            Why it matters: Perfect preparation for tech interviews at top companies and coding contests.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workshops & Bootcamps Section -->
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="gradient-text">Workshops & Bootcamps</span>
+                </h2>
+                <p class="text-gray-600 text-lg">Comprehensive learning tracks across multiple domains</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Workshop Category 1 -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl card-hover">
+                    <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-globe text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">Web Development</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
+                            <span>MERN Stack Mastery</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
+                            <span>React & Next.js Deep Dive</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
+                            <span>Backend APIs with Node.js</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
+                            <span>Responsive Design Workshop</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Workshop Category 2 -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl card-hover">
+                    <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-brain text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">AI/ML</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+                            <span>Machine Learning Fundamentals</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+                            <span>Deep Learning with PyTorch</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+                            <span>NLP & Text Processing</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+                            <span>Computer Vision Projects</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Workshop Category 3 -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl card-hover">
+                    <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-trophy text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">Competitive Programming</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                            <span>DSA Bootcamp (Beginner)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                            <span>Advanced Algorithms</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                            <span>Dynamic Programming Series</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+                            <span>Graph Theory Workshop</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Workshop Category 4 -->
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-2xl card-hover">
+                    <div class="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-mobile-alt text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">App Development</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
+                            <span>Flutter Cross-Platform Apps</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
+                            <span>React Native Essentials</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
+                            <span>Android Development (Kotlin)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
+                            <span>iOS Development (Swift)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Workshop Category 5 -->
+                <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl card-hover">
+                    <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-shield-alt text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">Cybersecurity</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
+                            <span>Ethical Hacking Basics</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
+                            <span>Web Security & OWASP</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
+                            <span>Network Security Workshop</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
+                            <span>Capture The Flag (CTF)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Workshop Category 6 -->
+                <div class="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-2xl card-hover">
+                    <div class="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-database text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">Data Science</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
+                            <span>Python for Data Analysis</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
+                            <span>Data Visualization Workshop</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
+                            <span>SQL & Database Management</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
+                            <span>Big Data & Analytics</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Past Events Section -->
+    <section class="py-20 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="gradient-text">Past Events Highlights</span>
+                </h2>
+                <p class="text-gray-600 text-lg">Celebrating our journey of innovation and learning</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Past Event 1 -->
+                <div class="bg-white rounded-3xl shadow-lg overflow-hidden card-hover">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 bg-gradient-to-br from-purple-400 to-indigo-500 p-8 flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i class="fas fa-laptop-code text-6xl mb-4"></i>
+                                <h3 class="text-2xl font-bold">HackFest 2024</h3>
+                                <p class="text-purple-100">March 2024</p>
+                            </div>
+                        </div>
+                        <div class="md:w-2/3 p-8">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">48-Hour Innovation Marathon</h3>
+                            <p class="text-gray-600 mb-6">
+                                Our biggest hackathon yet! Students built groundbreaking projects in AI, Web3, and IoT. Special guest judges from Google and Microsoft evaluated 45 innovative projects.
+                            </p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                <div class="text-center p-3 bg-purple-50 rounded-xl">
+                                    <div class="text-2xl font-bold text-purple-600">280</div>
+                                    <div class="text-xs text-gray-600">Participants</div>
+                                </div>
+                                <div class="text-center p-3 bg-indigo-50 rounded-xl">
+                                    <div class="text-2xl font-bold text-indigo-600">45</div>
+                                    <div class="text-xs text-gray-600">Projects</div>
+                                </div>
+                                <div class="text-center p-3 bg-blue-50 rounded-xl">
+                                    <div class="text-2xl font-bold text-blue-600">15</div>
+                                    <div class="text-xs text-gray-600">Winners</div>
+                                </div>
+                                <div class="text-center p-3 bg-green-50 rounded-xl">
+                                    <div class="text-2xl font-bold text-green-600">₹80K</div>
+                                    <div class="text-xs text-gray-600">Prizes</div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">AI/ML</span>
+                                <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">Web3</span>
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">IoT</span>
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">HealthTech</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Past Event 2 -->
+                <div class="bg-white rounded-3xl shadow-lg overflow-hidden card-hover">
+                    <div class="md:flex">
+                        <div class="md:w-1/3 bg-gradient-to-br from-green-400 to-teal-500 p-8 flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i class="fas fa-graduation-cap text-6xl mb-4"></i>
+                                <h3 class="text-2xl font-bold">ML Bootcamp</h3>
+                                <p class="text-green-100">September 2024</p>
+                            </div>
+                        </div>
+                        <div class="md:w-2/3 p-8">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">7-Day Intensive ML Training</h3>
+                            <p class="text-gray-600 mb-6">
+                                A comprehensive bootcamp
