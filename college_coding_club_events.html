@@ -1,519 +1,1373 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events - CodeHub College Coding Club</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<html lang="en" data-theme="dark-purple">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/geometries/TextGeometry.js"></script>
+
+    <title>CodeIO - Dynamic Theme Visualizer</title>
+    <link rel="stylesheet" href="style.css" />
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
+      /* =========================================
+    1. CSS VARIABLES & THEME DEFINITIONS
+    ========================================= */
+      :root {
+        /* Core Transitions */
+        --transition-speed: 0.3s;
+        --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+      }
+
+      /* --- THEME 2: Dark Purple --- */
+      [data-theme="dark-purple"] {
+        --bg-color: #12021c;
+        --bg-gradient: radial-gradient(
+          circle at 50% 30%,
+          #2d0a4d 0%,
+          #12021c 70%
+        );
+        --text-primary: #ffffff;
+        --text-secondary: #c9a3c6;
+        --accent-color: #a600ff;
+        --accent-glow: rgba(166, 0, 255, 0.3);
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --border-color: rgba(255, 255, 255, 0.15);
+        --button-text: #ffffff;
+      }
+
+      /* =========================================
+    2. BASE STYLES & LAYOUT
+    ========================================= */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      #code-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.15;
+        pointer-events: none;
+      }
+
+      body {
+        font-family: var(--font-main);
+        background-color: var(--bg-color);
+        background-image: var(--bg-gradient);
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: auto;
+        transition: background 0.5s ease, color 0.3s ease;
+      }
+
+      /* Navigation */
+      nav {
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem 5%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .logo {
+        font-weight: 800;
+        font-size: 1.5rem;
+        letter-spacing: -0.05em;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        align-items: center;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        transition: color var(--transition-speed);
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--text-primary);
+      }
+
+      /* The "Home" pill in nav */
+      .nav-pill {
+        background: var(--glass-bg);
+        padding: 0.5rem 1.2rem;
+        border-radius: 20px;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-color);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 1rem;
+      }
+
+      /* Badge above title */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        background: var(--glass-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .badge i {
+        color: var(--accent-color);
+      }
+
+      /* Main Typography */
+      h1 {
+        font-size: 4rem;
+        line-height: 1.1;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.03em;
+      }
+
+      p.subtitle {
+        color: var(--text-secondary);
+        max-width: 600px;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+
+      /* CTA Buttons */
+      .cta-container {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all var(--transition-speed);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background-color: var(--accent-color);
+        color: var(--button-text);
+        box-shadow: 0 10px 30px var(--accent-glow);
+        border: 1px solid transparent;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px var(--accent-glow);
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        background: var(--glass-bg);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--text-secondary);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Scroll indicator (aesthetic) */
+      .scroll-pill {
+        margin-top: auto;
+        margin-bottom: 2rem;
+        width: 24px;
+        height: 40px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+      }
+
+      .scroll-pill::before {
+        content: "";
+        width: 4px;
+        height: 8px;
+        background: var(--accent-color);
+        border-radius: 2px;
+        margin-top: 6px;
+      }
+
+      /* upcoming section */
+      .upcoming {
+        min-height: 100vh;
+      }
+
+      .upcoming-center-text {
+        padding: 4rem 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .upcoming-center-text h2 {
+        padding: 1rem;
+      }
+
+      .upcoming-text-head {
+        font-size: 3rem;
+      }
+
+      /* ================================
+   UPCOMING EVENTS — CARD STYLING
+   ================================ */
+
+      .events-grid {
+        width: 100%;
+        padding: 0 2rem 4rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        gap: 2.5rem;
+      }
+
+      .event-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        transition: transform 0.25s, box-shadow 0.3s;
+      }
+
+      .event-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Colored top banners */
+      .event-banner {
+        height: 10px;
+        width: 100%;
+      }
+
+      .banner-purple {
+        background: linear-gradient(90deg, #7a00ff, #c100ff);
+      }
+
+      .event-content {
+        padding: 2rem;
+      }
+
+      .event-date span {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .event-content h3 {
+        margin-top: 1rem;
+        margin-bottom: 0.8rem;
+        font-size: 1.4rem;
+      }
+
+      .event-content p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.2rem;
+      }
+
+      .event-learn h4 {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .event-learn ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      .event-learn li {
+        color: var(--text-secondary);
+        margin: 4px 0;
+      }
+
+      .event-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .event-btn {
+        margin-top: 1.8rem;
+        width: 100%;
+        padding: 0.9rem;
+        border-radius: 12px;
+        background: var(--accent-color);
+        border: none;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 8px 25px var(--accent-glow);
+      }
+
+      .event-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px var(--accent-glow);
+      }
+
+      /* ===============================
+   FLAGSHIP EVENTS (Dark Theme)
+   =============================== */
+
+      .flagship {
+        min-height: 100vh;
+        padding: 4rem 2rem;
+        width: 100%;
+      }
+
+      .flagship-center {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .flagship-title {
+        font-size: 3rem;
+        color: var(--text-primary);
+      }
+
+      .flagship-subtitle {
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+      }
+
+      .flagship-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 2.5rem;
+      }
+
+      /* Cards */
+      .flagship-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--border-color);
+        padding: 2rem;
+        border-radius: 20px;
+        backdrop-filter: blur(14px);
+        transition: 0.3s ease-in-out;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      }
+
+      .flagship-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Icon badges */
+      .flagship-icon {
+        width: 52px;
+        height: 52px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 14px;
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .icon-purple {
+        background: linear-gradient(135deg, #8f00ff, #d000ff);
+      }
+
+      .icon-green {
+        background: linear-gradient(135deg, #00ff9d, #00c76f);
+      }
+
+      /* Headings & Text */
+      .flagship-heading {
+        font-size: 1.6rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .flagship-desc {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.4rem;
+      }
+
+      /* Stats */
+      .flagship-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+      }
+
+      .stat-box {
+        flex: 1;
+        padding: 1.2rem;
+        border-radius: 14px;
+        text-align: center;
+      }
+
+      .stat-purple {
+        background: rgba(166, 0, 255, 0.12);
+        border: 1px solid rgba(166, 0, 255, 0.25);
+      }
+
+      .stat-green {
+        background: rgba(0, 255, 157, 0.12);
+        border: 1px solid rgba(0, 255, 157, 0.25);
+      }
+
+      /* Note Box */
+      .flagship-note {
+        display: flex;
+        gap: 0.8rem;
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+
+      .note-purple {
+        background: rgba(166, 0, 255, 0.15);
+        border-left: 4px solid #a600ff;
+      }
+
+      .note-green {
+        background: rgba(0, 255, 157, 0.15);
+        border-left: 4px solid #00ff9d;
+      }
+
+      /* ===============================
+   WORKSHOPS & BOOTCAMPS
+   =============================== */
+
+      .workshops {
+        min-height: 100vh;
+        padding: 4rem 2rem;
+        width: 100%;
+      }
+
+      .workshops-center {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .workshops-title {
+        font-size: 3rem;
+        color: var(--text-primary);
+      }
+
+      .workshops-subtitle {
+        color: var(--text-secondary);
+      }
+
+      .workshops-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 2rem;
+      }
+
+      /* Card Styling */
+      .workshop-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--border-color);
+        padding: 2rem;
+        border-radius: 20px;
+        backdrop-filter: blur(14px);
+        transition: 0.3s ease;
+      }
+
+      .workshop-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Icon Badge */
+      .workshop-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+      }
+
+      /* Icon Colors */
+      .icon-blue {
+        background: linear-gradient(135deg, #006aff, #4ca3ff);
+      }
+      .icon-purple {
+        background: linear-gradient(135deg, #8f00ff, #d000ff);
+      }
+      .icon-green {
+        background: linear-gradient(135deg, #00ff9d, #00c76f);
+      }
+      .icon-orange {
+        background: linear-gradient(135deg, #ff7a00, #ff3b00);
+      }
+      .icon-red {
+        background: linear-gradient(135deg, #ff0040, #ff6a6a);
+      }
+      .icon-cyan {
+        background: linear-gradient(135deg, #00e1ff, #00bcd4);
+      }
+
+      /* Card Background Tint */
+      .card-blue {
+        background: rgba(0, 106, 255, 0.12);
+      }
+      .card-purple {
+        background: rgba(166, 0, 255, 0.12);
+      }
+      .card-green {
+        background: rgba(0, 255, 157, 0.12);
+      }
+      .card-orange {
+        background: rgba(255, 122, 0, 0.12);
+      }
+      .card-red {
+        background: rgba(255, 0, 64, 0.12);
+      }
+      .card-cyan {
+        background: rgba(0, 225, 255, 0.12);
+      }
+
+      /* Text List */
+      .workshop-card h3 {
+        margin-bottom: 0.8rem;
+      }
+
+      .workshop-card ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .workshop-card li {
+        color: var(--text-secondary);
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+      }
+
+      /* ===================================
+   PAST EVENTS — DARK THEME
+   =================================== */
+
+      .past-events {
+        min-height: 100vh;
+        padding: 4rem 2rem;
+      }
+
+      .past-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .past-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
+      }
+      .past-center {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .past-title {
+        font-size: 3rem;
+        color: var(--text-primary);
+      }
+
+      .past-subtitle {
+        color: var(--text-secondary);
+      }
+
+      /* CARD WRAPPER */
+      .past-card {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        background: var(--glass-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 22px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      /* LEFT GRADIENT SIDE */
+      .past-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        color: #fff;
+      }
+
+      .past-left-content {
+        text-align: center;
+      }
+
+      .past-left h3 {
+        margin-top: 0.6rem;
+        font-size: 1.5rem;
+      }
+
+      .past-left p {
+        opacity: 0.8;
+      }
+
+      .gradient-purple {
+        background: linear-gradient(135deg, #8f00ff, #5a00d0);
+      }
+
+      .gradient-green {
+        background: linear-gradient(135deg, #00c76f, #00ff9d);
+      }
+
+      .past-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      /* RIGHT SIDE */
+      .past-right {
+        padding: 2.5rem;
+      }
+
+      .past-heading {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .past-desc {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+      }
+
+      /* STATS GRID */
+      .past-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-box {
+        padding: 1.1rem;
+        flex: 1;
+        border-radius: 12px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .stat-purple {
+        border: 1px solid rgba(166, 0, 255, 0.35);
+        background: rgba(166, 0, 255, 0.12);
+      }
+
+      .stat-green {
+        border: 1px solid rgba(0, 255, 157, 0.35);
+        background: rgba(0, 255, 157, 0.12);
+      }
+
+      .stat-box h4 {
+        font-size: 1.4rem;
+      }
+
+      /* TAGS */
+      .past-tags {
+        display: flex;
+        gap: 0.6rem;
+      }
+
+      .tag {
+        padding: 0.35rem 0.75rem;
+        border-radius: 25px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .tag-purple {
+        background: rgba(166, 0, 255, 0.2);
+      }
+      .tag-blue {
+        background: rgba(0, 106, 255, 0.2);
+      }
+      .tag-cyan {
+        background: rgba(0, 225, 255, 0.2);
+      }
+      .tag-green {
+        background: rgba(0, 255, 157, 0.2);
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        .past-card {
+          grid-template-columns: 1fr;
         }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(70px);
-            opacity: 0.3;
-            animation: float 20s infinite ease-in-out;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        
-        .calendar-day {
-            transition: all 0.2s ease;
-        }
-        
-        .calendar-day:hover {
-            background: #667eea;
-            color: white;
-            transform: scale(1.05);
-        }
-        
-        .event-dot {
-            width: 6px;
-            height: 6px;
-            background: #667eea;
-            border-radius: 50%;
-        }
+      }
+
+      /* =========================================
+    3. THEME VISUALIZER CONTROL BAR
+    ========================================= */
+      #theme-control {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(12px);
+        padding: 1rem;
+        border-radius: 50px;
+        display: flex;
+        gap: 1rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 100;
+      }
+
+      .theme-swatch {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.2s, border-color 0.2s;
+        position: relative;
+      }
+
+      .theme-swatch:hover {
+        transform: scale(1.2);
+      }
+
+      .theme-swatch.active {
+        border-color: #fff;
+        transform: scale(1.2);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+
+      /* Tooltip */
+      .theme-swatch::after {
+        content: attr(data-title);
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #000;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        opacity: 0;
+        pointer-events: none;
+        white-space: nowrap;
+        transition: opacity 0.2s;
+      }
+
+      .theme-swatch:hover::after {
+        opacity: 1;
+      }
     </style>
-</head>
-<body class="bg-gray-50">
-    
-    <!-- Hero Section -->
-    <section class="relative gradient-bg text-white overflow-hidden py-24 px-6">
-        <div class="blob w-96 h-96 bg-purple-400 top-0 right-0"></div>
-        <div class="blob w-80 h-80 bg-indigo-400 bottom-0 left-0"></div>
-        
-        <div class="max-w-6xl mx-auto relative z-10">
-            <div class="text-center">
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
-                    What's Happening at CodeHub
-                </h1>
-                <p class="text-xl md:text-2xl text-purple-100 mb-8 max-w-3xl mx-auto">
-                    Where innovation meets collaboration. Join us for workshops, hackathons, and coding sessions that transform ideas into reality.
-                </p>
-                <div class="flex gap-4 justify-center flex-wrap">
-                    <a href="#upcoming" class="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold hover:bg-purple-50 transition">
-                        View Upcoming Events
-                    </a>
-                    <a href="#calendar" class="border-2 border-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition">
-                        Event Calendar
-                    </a>
-                </div>
-            </div>
-        </div>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        &lt;CODE <span style="color: #0084ff">IO</span> &#x2f; &gt;
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#" class="nav-pill active">Events</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </nav>
+
+    <section class="hero">
+      <div id="code-bg"></div>
+      <div class="badge">
+        <span>⚡ Welcome to the future of college coding</span>
+      </div>
+
+      <h1>
+        What's Happening<br />
+        at &lt;CodeIO /&gt;
+      </h1>
+
+      <p class="subtitle">
+        Where innovation meets collaboration. Join us for workshops, hackathons,
+        and coding sessions that transform ideas into reality.
+      </p>
+
+      <div class="cta-container">
+        <a href="#" class="btn btn-primary">View upcoming events &rarr;</a>
+        <a href="#" class="btn btn-secondary">Events Calendar</a>
+      </div>
     </section>
 
-    <!-- Upcoming Events Section -->
-    <section id="upcoming" class="py-20 px-6 bg-white">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="gradient-text">Upcoming Events</span>
-                </h2>
-                <p class="text-gray-600 text-lg">Don't miss out on these amazing opportunities to learn and grow</p>
+    <section class="upcoming">
+      <div class="upcoming-center-text">
+        <h2><span class="upcoming-text-head">Upcoming Events</span></h2>
+        <p>Don't miss these amazing opportunities to learn and grow.</p>
+      </div>
+
+      <div class="events-grid">
+        <!-- Event Card 1 -->
+        <div class="event-card">
+          <div class="event-banner banner-purple"></div>
+
+          <div class="event-content">
+            <div class="event-date">
+              <span>📅 Dec 15, 2024 • 6:00 PM</span>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Event Card 1 -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2"></div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                            <i class="far fa-calendar"></i>
-                            <span>Dec 15, 2024 • 6:00 PM</span>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-gray-800">AI/ML Workshop Series - Part 1</h3>
-                        <p class="text-gray-600 mb-4">Kickstart your AI journey with hands-on machine learning fundamentals. Build your first ML model from scratch.</p>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold text-sm text-gray-700 mb-2">You'll Learn:</h4>
-                            <ul class="text-sm text-gray-600 space-y-1">
-                                <li>• Python for ML basics</li>
-                                <li>• Data preprocessing techniques</li>
-                                <li>• Building classification models</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
-                                <i class="fas fa-map-marker-alt mr-1"></i> Lab 204
-                            </span>
-                            <span class="text-gray-500 text-sm">
-                                <i class="fas fa-users mr-1"></i> 45 seats left
-                            </span>
-                        </div>
-                        
-                        <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition">
-                            Register Now
-                        </button>
-                    </div>
-                </div>
+            <h3>AI/ML Workshop Series – Part 1</h3>
+            <p>
+              Kickstart your AI journey with hands-on machine learning
+              fundamentals. Build your first ML model from scratch.
+            </p>
 
-                <!-- Event Card 2 -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
-                    <div class="bg-gradient-to-r from-green-500 to-teal-600 h-2"></div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                            <i class="far fa-calendar"></i>
-                            <span>Dec 20, 2024 • 5:00 PM</span>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-gray-800">CodeSprint Challenge</h3>
-                        <p class="text-gray-600 mb-4">Test your competitive programming skills in this intense 3-hour coding competition with exciting prizes.</p>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold text-sm text-gray-700 mb-2">You'll Learn:</h4>
-                            <ul class="text-sm text-gray-600 space-y-1">
-                                <li>• Advanced algorithms</li>
-                                <li>• Time optimization techniques</li>
-                                <li>• Problem-solving strategies</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                                <i class="fas fa-laptop mr-1"></i> Online
-                            </span>
-                            <span class="text-gray-500 text-sm">
-                                <i class="fas fa-trophy mr-1"></i> Prizes worth ₹20K
-                            </span>
-                        </div>
-                        
-                        <button class="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition">
-                            Register Now
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Event Card 3 -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100">
-                    <div class="bg-gradient-to-r from-orange-500 to-red-600 h-2"></div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                            <i class="far fa-calendar"></i>
-                            <span>Jan 5-7, 2025 • 48 Hours</span>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-gray-800">HackFest 2025</h3>
-                        <p class="text-gray-600 mb-4">Our flagship 48-hour hackathon. Build innovative solutions, network with industry experts, and win amazing prizes.</p>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold text-sm text-gray-700 mb-2">You'll Learn:</h4>
-                            <ul class="text-sm text-gray-600 space-y-1">
-                                <li>• Full-stack development</li>
-                                <li>• Team collaboration</li>
-                                <li>• Pitch presentations</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">
-                                <i class="fas fa-building mr-1"></i> Campus Auditorium
-                            </span>
-                            <span class="text-gray-500 text-sm">
-                                <i class="fas fa-trophy mr-1"></i> Prizes worth ₹1L
-                            </span>
-                        </div>
-                        
-                        <button class="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition">
-                            Register Now
-                        </button>
-                    </div>
-                </div>
+            <div class="event-learn">
+              <h4>You’ll Learn:</h4>
+              <ul>
+                <li>Python for ML basics</li>
+                <li>Data preprocessing techniques</li>
+                <li>Building classification models</li>
+              </ul>
             </div>
+
+            <div class="event-meta">
+              <span>📍 Lab 204</span>
+              <span>👥 45 seats left</span>
+            </div>
+
+            <button class="event-btn">Register Now</button>
+          </div>
         </div>
+
+        <!-- Event Card 2 -->
+        <div class="event-card">
+          <div class="event-banner banner-purple"></div>
+
+          <div class="event-content">
+            <div class="event-date">
+              <span>📅 Dec 20, 2024 • 5:00 PM</span>
+            </div>
+
+            <h3>CodeSprint Challenge</h3>
+            <p>
+              Test your competitive programming skills in a fast-paced 3-hour
+              coding challenge with exciting prizes.
+            </p>
+
+            <div class="event-learn">
+              <h4>You’ll Learn:</h4>
+              <ul>
+                <li>Advanced algorithms</li>
+                <li>Time optimization techniques</li>
+                <li>Problem-solving strategies</li>
+              </ul>
+            </div>
+
+            <div class="event-meta">
+              <span>🖥️ Online</span>
+              <span>🏆 Prizes worth ₹20K</span>
+            </div>
+
+            <button class="event-btn">Register Now</button>
+          </div>
+        </div>
+
+        <!-- Event Card 3 -->
+        <div class="event-card">
+          <div class="event-banner banner-purple"></div>
+
+          <div class="event-content">
+            <div class="event-date">
+              <span>📅 Jan 5–7, 2025 • 48 Hours</span>
+            </div>
+
+            <h3>HackFest 2025</h3>
+            <p>
+              Our flagship 48-hour hackathon. Build innovative solutions,
+              network with industry mentors, and win amazing prizes.
+            </p>
+
+            <div class="event-learn">
+              <h4>You’ll Learn:</h4>
+              <ul>
+                <li>Full-stack development</li>
+                <li>Team collaboration</li>
+                <li>Pitch presentations</li>
+              </ul>
+            </div>
+
+            <div class="event-meta">
+              <span>🏫 Campus Auditorium</span>
+              <span>🏆 Prizes worth ₹1L</span>
+            </div>
+
+            <button class="event-btn">Register Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="flagship">
+      <div class="flagship-center">
+        <h2 class="flagship-title">Flagship Events</h2>
+        <p class="flagship-subtitle">
+          Our signature events that define the year
+        </p>
+      </div>
+
+      <div class="flagship-grid">
+        <!-- Card 1 -->
+        <div class="flagship-card">
+          <div class="flagship-icon icon-purple">🚀</div>
+
+          <h3 class="flagship-heading">TechSummit Annual Fest</h3>
+
+          <p class="flagship-desc">
+            Our biggest tech extravaganza featuring guest lectures, multiple
+            competition tracks, workshops, and networking sessions. 500+
+            participants from 20+ colleges compete across web dev, AI/ML, app
+            dev, and cybersecurity.
+          </p>
+
+          <div class="flagship-stats">
+            <div class="stat-box stat-purple">
+              <h4>500+</h4>
+              <p>Participants</p>
+            </div>
+            <div class="stat-box stat-purple">
+              <h4>₹5L+</h4>
+              <p>Prize Pool</p>
+            </div>
+          </div>
+
+          <div class="flagship-note note-purple">
+            <span>💡</span>
+            <p>
+              Why it matters: Our largest networking opportunity connecting
+              students with tech giants & startups.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="flagship-card">
+          <div class="flagship-icon icon-green">💻</div>
+
+          <h3 class="flagship-heading">CodeWars Championship</h3>
+
+          <p class="flagship-desc">
+            An intensive competitive programming series running throughout the
+            semester. Weekly challenges, leaderboards, and the grand finale to
+            crown the ultimate problem solver.
+          </p>
+
+          <div class="flagship-stats">
+            <div class="stat-box stat-green">
+              <h4>12</h4>
+              <p>Weekly Rounds</p>
+            </div>
+            <div class="stat-box stat-green">
+              <h4>300+</h4>
+              <p>Competitors</p>
+            </div>
+          </div>
+
+          <div class="flagship-note note-green">
+            <span>💡</span>
+            <p>
+              Why it matters: Perfect prep for coding interviews & major tech
+              contests.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="workshops">
+      <div class="workshops-center">
+        <h2 class="workshops-title">Workshops & Bootcamps</h2>
+        <p class="workshops-subtitle">
+          Comprehensive learning tracks across multiple domains
+        </p>
+      </div>
+
+      <div class="workshops-grid">
+        <!-- Web Dev -->
+        <div class="workshop-card card-blue">
+          <div class="workshop-icon icon-blue">🌐</div>
+          <h3>Web Development</h3>
+          <ul>
+            <li>✔ MERN Stack Mastery</li>
+            <li>✔ React & Next.js Deep Dive</li>
+            <li>✔ Backend APIs with Node.js</li>
+            <li>✔ Responsive Design Workshop</li>
+          </ul>
+        </div>
+
+        <!-- AI/ML -->
+        <div class="workshop-card card-purple">
+          <div class="workshop-icon icon-purple">🧠</div>
+          <h3>AI/ML</h3>
+          <ul>
+            <li>✔ Machine Learning Fundamentals</li>
+            <li>✔ Deep Learning with PyTorch</li>
+            <li>✔ NLP & Text Processing</li>
+            <li>✔ Computer Vision Projects</li>
+          </ul>
+        </div>
+
+        <!-- DSA -->
+        <div class="workshop-card card-green">
+          <div class="workshop-icon icon-green">🏆</div>
+          <h3>Competitive Programming</h3>
+          <ul>
+            <li>✔ DSA Bootcamp (Beginner)</li>
+            <li>✔ Advanced Algorithms</li>
+            <li>✔ Dynamic Programming Series</li>
+            <li>✔ Graph Theory Workshop</li>
+          </ul>
+        </div>
+
+        <!-- App Dev -->
+        <div class="workshop-card card-orange">
+          <div class="workshop-icon icon-orange">📱</div>
+          <h3>App Development</h3>
+          <ul>
+            <li>✔ Flutter Cross-Platform Apps</li>
+            <li>✔ React Native Essentials</li>
+            <li>✔ Android Development (Kotlin)</li>
+            <li>✔ iOS Development (Swift)</li>
+          </ul>
+        </div>
+
+        <!-- Cybersecurity -->
+        <div class="workshop-card card-red">
+          <div class="workshop-icon icon-red">🛡️</div>
+          <h3>Cybersecurity</h3>
+          <ul>
+            <li>✔ Ethical Hacking Basics</li>
+            <li>✔ Web Security & OWASP</li>
+            <li>✔ Network Security Workshop</li>
+            <li>✔ Capture The Flag (CTF)</li>
+          </ul>
+        </div>
+
+        <!-- Data Science -->
+        <div class="workshop-card card-cyan">
+          <div class="workshop-icon icon-cyan">🗄️</div>
+          <h3>Data Science</h3>
+          <ul>
+            <li>✔ Python for Data Analysis</li>
+            <li>✔ Data Visualization Workshop</li>
+            <li>✔ SQL & Database Management</li>
+            <li>✔ Big Data & Analytics</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="past-events">
+      <div class="past-center">
+        <h2 class="past-title">Past Events Highlights</h2>
+        <p class="past-subtitle">
+          Celebrating our journey of innovation and learning
+        </p>
+      </div>
+
+      <div class="past-card">
+        <!-- LEFT Gradient Panel -->
+        <div class="past-left gradient-purple">
+          <div class="past-left-content">
+            <div class="past-icon">💻</div>
+            <h3>HackFest 2024</h3>
+            <p>March 2024</p>
+          </div>
+        </div>
+
+        <!-- RIGHT Glass Panel -->
+        <div class="past-right">
+          <h3 class="past-heading">48-Hour Innovation Marathon</h3>
+
+          <p class="past-desc">
+            Our biggest hackathon yet! Students built groundbreaking projects in
+            AI, Web3, and IoT. Special guest judges from Google and Microsoft
+            evaluated 45 innovative projects.
+          </p>
+
+          <div class="past-stats">
+            <div class="stat-box stat-purple">
+              <h4>280</h4>
+              <p>Participants</p>
+            </div>
+            <div class="stat-box stat-purple">
+              <h4>45</h4>
+              <p>Projects</p>
+            </div>
+            <div class="stat-box stat-purple">
+              <h4>15</h4>
+              <p>Winners</p>
+            </div>
+            <div class="stat-box stat-green">
+              <h4>₹80K</h4>
+              <p>Prizes</p>
+            </div>
+          </div>
+
+          <div class="past-tags">
+            <span class="tag tag-purple">AI/ML</span>
+            <span class="tag tag-blue">Web3</span>
+            <span class="tag tag-cyan">IoT</span>
+            <span class="tag tag-green">HealthTech</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECOND EVENT -->
+      <div class="past-card">
+        <!-- LEFT GRADIENT PANEL -->
+        <div class="past-left gradient-green">
+          <div class="past-left-content">
+            <div class="past-icon">🎓</div>
+            <h3>ML Bootcamp</h3>
+            <p>September 2024</p>
+          </div>
+        </div>
+
+        <!-- RIGHT GLASS PANEL -->
+        <div class="past-right">
+          <h3 class="past-heading">7-Day Intensive ML Training</h3>
+          <p class="past-desc">
+            A comprehensive bootcamp covering machine learning foundations,
+            hands-on projects, data preprocessing, model building, and
+            evaluation. Mentored by industry experts.
+          </p>
+
+          <div class="past-stats">
+            <div class="stat-box stat-purple">
+              <h4>120</h4>
+              <p>Participants</p>
+            </div>
+            <div class="stat-box stat-purple">
+              <h4>8</h4>
+              <p>ML Projects</p>
+            </div>
+            <div class="stat-box stat-green">
+              <h4>7 Days</h4>
+              <p>Training</p>
+            </div>
+          </div>
+
+          <div class="past-tags">
+            <span class="tag tag-purple">AI/ML</span>
+            <span class="tag tag-cyan">Deep Learning</span>
+            <span class="tag tag-green">Python</span>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Flagship Events Section -->
-    <section class="py-20 px-6 bg-gradient-to-br from-purple-50 to-indigo-50">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="gradient-text">Flagship Events</span>
-                </h2>
-                <p class="text-gray-600 text-lg">Our signature events that define the year</p>
-            </div>
+    <div id="theme-control"></div>
 
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Flagship Event 1 -->
-                <div class="bg-white rounded-3xl p-8 shadow-xl card-hover">
-                    <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                        <i class="fas fa-rocket text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-3xl font-bold mb-4 text-gray-800">TechSummit Annual Fest</h3>
-                    <p class="text-gray-600 mb-6 leading-relaxed">
-                        Our biggest tech extravaganza featuring guest lectures from industry leaders, multiple competition tracks, workshops, and networking sessions. Over 500 participants from 20+ colleges compete across web dev, app dev, AI/ML, and cybersecurity domains.
-                    </p>
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="text-center p-4 bg-purple-50 rounded-xl">
-                            <div class="text-3xl font-bold text-purple-600">500+</div>
-                            <div class="text-sm text-gray-600">Participants</div>
-                        </div>
-                        <div class="text-center p-4 bg-indigo-50 rounded-xl">
-                            <div class="text-3xl font-bold text-indigo-600">₹5L+</div>
-                            <div class="text-sm text-gray-600">Prize Pool</div>
-                        </div>
-                    </div>
-                    <div class="bg-purple-100 border-l-4 border-purple-600 p-4 rounded-r-xl">
-                        <p class="text-purple-800 font-medium">
-                            <i class="fas fa-lightbulb mr-2"></i>
-                            Why it matters: Our largest networking opportunity connecting students with tech giants and startups.
-                        </p>
-                    </div>
-                </div>
+    <script src="">
+      // Theme Definitions configuration
+      const themes = [
+        { name: "dark-purple", color: "#a600ff", title: "Dark Purple" },
+      ];
 
-                <!-- Flagship Event 2 -->
-                <div class="bg-white rounded-3xl p-8 shadow-xl card-hover">
-                    <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl flex items-center justify-center mb-6">
-                        <i class="fas fa-code text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-3xl font-bold mb-4 text-gray-800">CodeWars Championship</h3>
-                    <p class="text-gray-600 mb-6 leading-relaxed">
-                        An intensive competitive programming contest series running throughout the semester. Weekly challenges building up to the grand finale. Sharpen your DSA skills, compete on leaderboards, and earn recognition as the ultimate problem solver.
-                    </p>
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="text-center p-4 bg-green-50 rounded-xl">
-                            <div class="text-3xl font-bold text-green-600">12</div>
-                            <div class="text-sm text-gray-600">Weekly Rounds</div>
-                        </div>
-                        <div class="text-center p-4 bg-teal-50 rounded-xl">
-                            <div class="text-3xl font-bold text-teal-600">300+</div>
-                            <div class="text-sm text-gray-600">Competitors</div>
-                        </div>
-                    </div>
-                    <div class="bg-green-100 border-l-4 border-green-600 p-4 rounded-r-xl">
-                        <p class="text-green-800 font-medium">
-                            <i class="fas fa-lightbulb mr-2"></i>
-                            Why it matters: Perfect preparation for tech interviews at top companies and coding contests.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      const controlContainer = document.getElementById("theme-control");
 
-    <!-- Workshops & Bootcamps Section -->
-    <section class="py-20 px-6 bg-white">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="gradient-text">Workshops & Bootcamps</span>
-                </h2>
-                <p class="text-gray-600 text-lg">Comprehensive learning tracks across multiple domains</p>
-            </div>
+      // Function to Initialize Swatches
+      function initThemeVisualizer() {
+        themes.forEach((theme) => {
+          const swatch = document.createElement("div");
+          swatch.className = "theme-swatch";
+          swatch.style.backgroundColor = theme.color;
+          swatch.setAttribute("data-theme-id", theme.name);
+          swatch.setAttribute("data-title", theme.title);
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Workshop Category 1 -->
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl card-hover">
-                    <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-globe text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">Web Development</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
-                            <span>MERN Stack Mastery</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
-                            <span>React & Next.js Deep Dive</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
-                            <span>Backend APIs with Node.js</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-blue-600 mr-2 mt-1"></i>
-                            <span>Responsive Design Workshop</span>
-                        </li>
-                    </ul>
-                </div>
+          // Check default theme to add active class
+          if (
+            document.documentElement.getAttribute("data-theme") === theme.name
+          ) {
+            swatch.classList.add("active");
+          }
 
-                <!-- Workshop Category 2 -->
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl card-hover">
-                    <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-brain text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">AI/ML</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
-                            <span>Machine Learning Fundamentals</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
-                            <span>Deep Learning with PyTorch</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
-                            <span>NLP & Text Processing</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
-                            <span>Computer Vision Projects</span>
-                        </li>
-                    </ul>
-                </div>
+          // Add Click Event Listener
+          swatch.addEventListener("click", () => {
+            applyTheme(theme.name, swatch);
+          });
 
-                <!-- Workshop Category 3 -->
-                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl card-hover">
-                    <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-trophy text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">Competitive Programming</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
-                            <span>DSA Bootcamp (Beginner)</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
-                            <span>Advanced Algorithms</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
-                            <span>Dynamic Programming Series</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
-                            <span>Graph Theory Workshop</span>
-                        </li>
-                    </ul>
-                </div>
+          controlContainer.appendChild(swatch);
+        });
+      }
 
-                <!-- Workshop Category 4 -->
-                <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-2xl card-hover">
-                    <div class="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-mobile-alt text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">App Development</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
-                            <span>Flutter Cross-Platform Apps</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
-                            <span>React Native Essentials</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
-                            <span>Android Development (Kotlin)</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-orange-600 mr-2 mt-1"></i>
-                            <span>iOS Development (Swift)</span>
-                        </li>
-                    </ul>
-                </div>
+      // Function to Apply Theme
+      function applyTheme(themeName, clickedSwatch) {
+        // 1. Update the Data Attribute on HTML (Triggers CSS Variable change)
+        document.documentElement.setAttribute("data-theme", themeName);
 
-                <!-- Workshop Category 5 -->
-                <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl card-hover">
-                    <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-shield-alt text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">Cybersecurity</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
-                            <span>Ethical Hacking Basics</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
-                            <span>Web Security & OWASP</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
-                            <span>Network Security Workshop</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-red-600 mr-2 mt-1"></i>
-                            <span>Capture The Flag (CTF)</span>
-                        </li>
-                    </ul>
-                </div>
+        // 2. Update Active State on Swatches
+        const allSwatches = document.querySelectorAll(".theme-swatch");
+        allSwatches.forEach((s) => s.classList.remove("active"));
+        clickedSwatch.classList.add("active");
+      }
 
-                <!-- Workshop Category 6 -->
-                <div class="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-2xl card-hover">
-                    <div class="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center mb-4">
-                        <i class="fas fa-database text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">Data Science</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
-                            <span>Python for Data Analysis</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
-                            <span>Data Visualization Workshop</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
-                            <span>SQL & Database Management</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-teal-600 mr-2 mt-1"></i>
-                            <span>Big Data & Analytics</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+      const container = document.getElementById("code-bg");
 
-    <!-- Past Events Section -->
-    <section class="py-20 px-6 bg-gray-50">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="gradient-text">Past Events Highlights</span>
-                </h2>
-                <p class="text-gray-600 text-lg">Celebrating our journey of innovation and learning</p>
-            </div>
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        60,
+        window.innerWidth / window.innerHeight,
+        1,
+        1000
+      );
+      camera.position.z = 60;
 
-            <div class="space-y-8">
-                <!-- Past Event 1 -->
-                <div class="bg-white rounded-3xl shadow-lg overflow-hidden card-hover">
-                    <div class="md:flex">
-                        <div class="md:w-1/3 bg-gradient-to-br from-purple-400 to-indigo-500 p-8 flex items-center justify-center">
-                            <div class="text-center text-white">
-                                <i class="fas fa-laptop-code text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold">HackFest 2024</h3>
-                                <p class="text-purple-100">March 2024</p>
-                            </div>
-                        </div>
-                        <div class="md:w-2/3 p-8">
-                            <h3 class="text-2xl font-bold mb-4 text-gray-800">48-Hour Innovation Marathon</h3>
-                            <p class="text-gray-600 mb-6">
-                                Our biggest hackathon yet! Students built groundbreaking projects in AI, Web3, and IoT. Special guest judges from Google and Microsoft evaluated 45 innovative projects.
-                            </p>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                                <div class="text-center p-3 bg-purple-50 rounded-xl">
-                                    <div class="text-2xl font-bold text-purple-600">280</div>
-                                    <div class="text-xs text-gray-600">Participants</div>
-                                </div>
-                                <div class="text-center p-3 bg-indigo-50 rounded-xl">
-                                    <div class="text-2xl font-bold text-indigo-600">45</div>
-                                    <div class="text-xs text-gray-600">Projects</div>
-                                </div>
-                                <div class="text-center p-3 bg-blue-50 rounded-xl">
-                                    <div class="text-2xl font-bold text-blue-600">15</div>
-                                    <div class="text-xs text-gray-600">Winners</div>
-                                </div>
-                                <div class="text-center p-3 bg-green-50 rounded-xl">
-                                    <div class="text-2xl font-bold text-green-600">₹80K</div>
-                                    <div class="text-xs text-gray-600">Prizes</div>
-                                </div>
-                            </div>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">AI/ML</span>
-                                <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">Web3</span>
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">IoT</span>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">HealthTech</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
 
-                <!-- Past Event 2 -->
-                <div class="bg-white rounded-3xl shadow-lg overflow-hidden card-hover">
-                    <div class="md:flex">
-                        <div class="md:w-1/3 bg-gradient-to-br from-green-400 to-teal-500 p-8 flex items-center justify-center">
-                            <div class="text-center text-white">
-                                <i class="fas fa-graduation-cap text-6xl mb-4"></i>
-                                <h3 class="text-2xl font-bold">ML Bootcamp</h3>
-                                <p class="text-green-100">September 2024</p>
-                            </div>
-                        </div>
-                        <div class="md:w-2/3 p-8">
-                            <h3 class="text-2xl font-bold mb-4 text-gray-800">7-Day Intensive ML Training</h3>
-                            <p class="text-gray-600 mb-6">
-                                A comprehensive bootcamp
+      // Symbols you want drifting
+      const symbols = [
+        "{ }",
+        "< />",
+        "</>",
+        "=>",
+        "()",
+        ";",
+        "const",
+        "let",
+        "fn",
+        "{}",
+        "+=",
+        "::",
+      ];
+
+      const spriteGroup = new THREE.Group();
+      scene.add(spriteGroup);
+
+      function makeSymbolSprite(text) {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = 256;
+        canvas.height = 256;
+
+        // Glow effect
+        ctx.shadowColor = "#bb55ff";
+        ctx.shadowBlur = 30;
+
+        // Text style
+        ctx.fillStyle = "#e8c7ff"; // bright lavender (SUPER visible)
+        ctx.font = "bold 60px monospace"; // bigger and sharper
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(text, 128, 128);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.needsUpdate = true;
+
+        const material = new THREE.SpriteMaterial({
+          map: texture,
+          transparent: true,
+        });
+
+        const sprite = new THREE.Sprite(material);
+
+        sprite.scale.set(7, 7, 1); // slightly bigger so visible
+
+        // Spread around more evenly
+        sprite.position.x = Math.random() * 130 - 65;
+        sprite.position.y = Math.random() * 70 - 35;
+        sprite.position.z = Math.random() * -20;
+
+        // Movement speed (slower = elegant)
+        sprite.userData.vx = (Math.random() - 0.5) * 0.01;
+        sprite.userData.vy = (Math.random() - 0.5) * 0.01;
+
+        // Higher opacity = more visible
+        sprite.material.opacity = 0.8;
+
+        return sprite;
+      }
+
+      // Create 50 floating symbols
+      for (let i = 0; i < 50; i++) {
+        const text = symbols[Math.floor(Math.random() * symbols.length)];
+        spriteGroup.add(makeSymbolSprite(text));
+      }
+
+      // Animate
+      function animate() {
+        requestAnimationFrame(animate);
+
+        spriteGroup.children.forEach((s) => {
+          s.position.x += s.userData.vx;
+          s.position.y += s.userData.vy;
+
+          // Wrap-around effect
+          if (s.position.x > 65) s.position.x = -65;
+          if (s.position.x < -65) s.position.x = 65;
+          if (s.position.y > 35) s.position.y = -35;
+          if (s.position.y < -35) s.position.y = 35;
+
+          // gentle breathing (NOT rotation)
+          s.scale.x = 6 + Math.sin(Date.now() * 0.001) * 0.2;
+          s.scale.y = s.scale.x;
+        });
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Resize support
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Run Initialization
+      document.addEventListener("DOMContentLoaded", initThemeVisualizer);
+    </script>
+  </body>
+</html>
