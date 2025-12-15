@@ -38,6 +38,126 @@
         --button-text: #ffffff;
       }
 
+
+    
+    
+     /* --- Search & filter controls (styled to match site theme) --- */
+     .event-controls { padding: 0 2rem 1rem; display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
+     .event-controls .search-input,
+     .event-controls .filter-select {
+       background: var(--glass-bg);
+       border: 1px solid var(--border-color);
+       color: var(--text-primary);
+       padding: 0.65rem 0.9rem;
+       border-radius: 12px;
+       font-weight: 600;
+       outline: none;
+       transition: box-shadow var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed);
+       min-width: 220px;
+       -webkit-appearance: none;
+       appearance: none;
+       background-image: none;
+     }
+     .event-controls .search-input::placeholder { color: var(--text-secondary); font-weight:500; }
+     .event-controls .filter-select { padding-right: 2.2rem; }
+     .event-controls .search-input:focus,
+     .event-controls .filter-select:focus {
+       box-shadow: 0 10px 30px var(--accent-glow);
+       border-color: var(--accent-color);
+       transform: translateY(-2px);
+     }
+     .event-controls .btn { padding:0.6rem 0.9rem; border-radius:12px; font-weight:700; }
+     .event-controls .btn-secondary {
+       background: var(--glass-bg);
+       border: 1px solid var(--border-color);
+       color: var(--text-secondary);
+     }
+     .event-controls .btn-secondary:hover {
+       color: var(--text-primary);
+       border-color: var(--accent-color);
+       box-shadow: 0 10px 30px var(--accent-glow);
+       transform: translateY(-2px);
+     }
+     /* small chips (optional tag UI if added later) */
+     .event-controls .chip {
+       background: rgba(255,255,255,0.02);
+       border: 1px solid var(--border-color);
+       padding: 0.35rem 0.7rem;
+       border-radius: 999px;
+       cursor: pointer;
+       color: var(--text-secondary);
+       font-weight: 700;
+     }
+     .event-controls .chip.active {
+       background: linear-gradient(90deg,#7a00ff,#c100ff);
+       color: #fff;
+       box-shadow: 0 10px 30px var(--accent-glow);
+     }
+
+     /* --- Date input styling (matches search/filters) --- */
+     .event-controls .date-input {
+       background: var(--glass-bg);
+       border: 1px solid var(--border-color);
+       color: var(--text-primary);
+       padding: 0.56rem 0.7rem;
+       border-radius: 12px;
+       font-weight: 600;
+       outline: none;
+       transition: box-shadow var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed);
+     }
+     .event-controls .date-input:focus {
+       box-shadow: 0 10px 30px var(--accent-glow);
+       border-color: var(--accent-color);
+       transform: translateY(-2px);
+    }
+
+      .theme-swatch:hover::after {
+        opacity: 1;
+      }
+
+     /* Entry fee badge */
+     .fee-badge {
+       display:inline-block;
+       padding:0.25rem 0.6rem;
+       border-radius:999px;
+       background: rgba(255,255,255,0.03);
+       color: var(--text-secondary);
+       font-weight:700;
+       border:1px solid var(--border-color);
+       font-size:0.85rem;
+     }
+
+     /* Past events controls (reuse event-controls look) */
+     .past-controls { padding: 0 2rem 1rem; display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
+     .past-controls .search-input, .past-controls .date-input { min-width:200px; }
+/* Make past-controls inputs & chips match event-controls styling */
+    .past-controls .search-input,
+    .past-controls .filter-select,
+    .past-controls .date-input {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.56rem 0.7rem;
+      border-radius: 12px;
+      font-weight: 600;
+      outline: none;
+      transition: box-shadow var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed);
+    }
+    .past-controls .chip {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-color);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+cursor: pointer;
+      color: var(--text-secondary);
+      font-weight: 700;
+    }
+    .past-controls .chip.active {
+      background: linear-gradient(90deg,#7a00ff,#c100ff);
+      color: #fff;
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
       /* =========================================
     2. BASE STYLES & LAYOUT
     ========================================= */
@@ -743,6 +863,43 @@
           grid-template-columns: 1fr;
         }
       }
+/* Make past-controls visually identical to event-controls */
+     .past-controls.event-controls { padding: 0 2rem 1rem; display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; }
+     .past-controls.event-controls .search-input,
+         .past-controls.event-controls .filter-select,
+     .past-controls.event-controls .date-input {
+       background: var(--glass-bg);
+       border: 1px solid var(--border-color);
+       color: var(--text-primary);
+       padding: 0.65rem 0.9rem;
+       border-radius: 12px;
+       font-weight: 600;
+       outline: none;
+       transition: box-shadow var(--transition-speed), transform var(--transition-speed), border-color var(--transition-speed);
+       min-width: 200px;
+     }
+     .past-controls.event-controls .search-input::placeholder { color: var(--text-secondary); }
+     .past-controls.event-controls .filter-select:focus,
+     .past-controls.event-controls .search-input:focus,
+     .past-controls.event-controls .date-input:focus {
+       box-shadow: 0 10px 30px var(--accent-glow);
+       border-color: var(--accent-color);
+       transform: translateY(-2px);
+     }
+     .past-controls.event-controls .chip {
+       background: rgba(255,255,255,0.02);
+       border: 1px solid var(--border-color);
+       padding: 0.35rem 0.7rem;
+       border-radius: 999px;
+       cursor: pointer;
+       color: var(--text-secondary);
+       font-weight: 700;
+     }
+     .past-controls.event-controls .chip.active {
+       background: linear-gradient(90deg,#7a00ff,#c100ff);
+       color: #fff;
+       box-shadow: 0 10px 30px var(--accent-glow);
+     }
 
       /* =========================================
     3. THEME VISUALIZER CONTROL BAR
@@ -840,20 +997,58 @@
       </div>
     </section>
 
+    
+   
     <section class="upcoming">
       <div class="upcoming-center-text">
         <h2><span class="upcoming-text-head">Upcoming Events</span></h2>
         <p>Don't miss these amazing opportunities to learn and grow.</p>
       </div>
 
-      <div class="events-grid">
-        <!-- Event Card 1 -->
-        <div class="event-card">
-          <div class="event-banner banner-purple"></div>
+    <!-- Search & Filters (styled) -->
+     <div class="event-controls">
+       <input id="eventSearch" class="search-input" type="search" placeholder="Search events (title, description)..." />
+       <select id="eventType" class="filter-select">
+         <option value="all">All types</option>
+         <option value="workshop">Workshop</option>
+         <option value="hackathon">Hackathon</option>
+         <option value="challenge">Challenge</option>
+       </select>
+       <select id="eventLocation" class="filter-select">
+         <option value="any">Any location</option>
+         <option value="online">Online</option>
+         <option value="on-campus">On campus</option>
+       </select>
+       <!-- Date range filter -->
+       <input id="eventStartDate" class="date-input" type="date" title="Start date" aria-label="Start date" />
+       <input id="eventEndDate" class="date-input" type="date" title="End date" aria-label="End date" />
+       <button id="clearFilters" class="btn btn-secondary">Clear</button>
+     </div>
+ <!-- Tag chips (optional topic filters) -->
+    <div class="event-controls" style="padding-top:0.5rem;">
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+        <div class="chip" data-tag="AI/ML">AI/ML</div>
+        <div class="chip" data-tag="Web">Web</div>
+        <div class="chip" data-tag="DSA">DSA</div>
+        <div class="chip" data-tag="App">App</div>
+        <div class="chip" data-tag="Security">Security</div>
+      </div>
+   </div>
 
+
+      <div class="events-grid">
+       <!-- Event Card 1 -->
+        <div class="event-card"
+             data-title="AI/ML Workshop Series – Part 1"
+             data-desc="Kickstart your AI journey with hands-on machine learning fundamentals."
+             data-date="2025-12-15T18:00:00"
+             data-type="workshop"
+             data-location="on-campus"
++             data-tags="AI/ML,Python,ML">
+           <div class="event-banner banner-purple"></div>
           <div class="event-content">
             <div class="event-date">
-              <span>📅 Dec 15, 2024 • 6:00 PM</span>
+              <span>📅 Dec 15, 2025 • 6:00 PM</span>
             </div>
 
             <h3>AI/ML Workshop Series – Part 1</h3>
@@ -874,6 +1069,7 @@
             <div class="event-meta">
               <span>📍 Lab 204</span>
               <span>👥 45 seats left</span>
+              <span class="fee-badge" title="Entry fee">₹199</span>
             </div>
 
             <button class="event-btn">Register Now</button>
@@ -881,12 +1077,18 @@
         </div>
 
         <!-- Event Card 2 -->
-        <div class="event-card">
-          <div class="event-banner banner-purple"></div>
+        <div class="event-card"
+             data-title="CodeSprint Challenge"
+             data-desc="Test your competitive programming skills in a fast-paced 3-hour coding challenge."
+             data-date="2025-12-20T17:00:00"
+             data-type="challenge"
+             data-location="online"
+             data-tags="DSA,Algorithms,Competitive">
+           <div class="event-banner banner-purple"></div>
 
           <div class="event-content">
             <div class="event-date">
-              <span>📅 Dec 20, 2024 • 5:00 PM</span>
+              <span>📅 Dec 20, 2025 • 5:00 PM</span>
             </div>
 
             <h3>CodeSprint Challenge</h3>
@@ -907,6 +1109,7 @@
             <div class="event-meta">
               <span>🖥️ Online</span>
               <span>🏆 Prizes worth ₹20K</span>
+              <span class="fee-badge" title="Entry fee">Free</span>
             </div>
 
             <button class="event-btn">Register Now</button>
@@ -914,12 +1117,17 @@
         </div>
 
         <!-- Event Card 3 -->
-        <div class="event-card">
-          <div class="event-banner banner-purple"></div>
-
+        <div class="event-card"
+             data-title="HackFest 2025"
+             data-desc="48-hour hackathon. Build solutions, network with mentors, win prizes."
+             data-date="2026-01-05T09:00:00"
+             data-type="hackathon"
+             data-location="on-campus"
+             data-tags="Hackathon,Team,Full-stack">
+           <div class="event-banner banner-purple"></div>
           <div class="event-content">
             <div class="event-date">
-              <span>📅 Jan 5–7, 2025 • 48 Hours</span>
+              <span>📅 Jan 5–7, 2026 • 48 Hours</span>
             </div>
 
             <h3>HackFest 2025</h3>
@@ -939,7 +1147,8 @@
 
             <div class="event-meta">
               <span>🏫 Campus Auditorium</span>
-              <span>🏆 Prizes worth ₹1L</span>
+               <span>🏆 Prizes worth ₹1L</span>
+              <span class="fee-badge" title="Entry fee">₹299</span>
             </div>
 
             <button class="event-btn">Register Now</button>
@@ -968,6 +1177,9 @@
             participants from 20+ colleges compete across web dev, AI/ML, app
             dev, and cybersecurity.
           </p>
+          <div style="margin-bottom:0.8rem;">
+            <span class="fee-badge">Entry Fee: Free</span>
+          </div>
 
           <div class="flagship-stats">
             <div class="stat-box stat-purple">
@@ -1000,7 +1212,9 @@
             semester. Weekly challenges, leaderboards, and the grand finale to
             crown the ultimate problem solver.
           </p>
-
+ <div style="margin-bottom:0.8rem;">
+            <span class="fee-badge">Entry Fee: ₹499</span>
+          </div>
           <div class="flagship-stats">
             <div class="stat-box stat-green">
               <h4>12</h4>
@@ -1111,14 +1325,42 @@
           Celebrating our journey of innovation and learning
         </p>
       </div>
+       <!-- Past events search & date filters -->
+     <!-- Past controls: same style as upcoming -->
+     <div class="past-controls event-controls">
+       <input id="pastSearch" class="search-input" type="search" placeholder="Search past events..." />
+       <select id="pastType" class="filter-select" aria-label="Past type">
+         <option value="all">All types</option>
+         <option value="workshop">Workshop</option>
+         <option value="hackathon">Hackathon</option>
+         <option value="challenge">Challenge</option>
+       </select>
+       <select id="pastLocation" class="filter-select" aria-label="Past location">
+         <option value="any">Any location</option>
+         <option value="online">Online</option>
+         <option value="on-campus">On campus</option>
+       </select>
+       <input id="pastStartDate" class="date-input" type="date" aria-label="Past start date" />
+       <input id="pastEndDate" class="date-input" type="date" aria-label="Past end date" />
+       <button id="pastClear" class="btn btn-secondary">Clear</button>
 
-      <div class="past-card">
+       <!-- Tag chips (styled) -->
+       <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-left:0.5rem;">
+         <div class="chip" data-tag="AI/ML">AI/ML</div>
+         <div class="chip" data-tag="Web3">Web3</div>
+         <div class="chip" data-tag="IoT">IoT</div>
+         <div class="chip" data-tag="Deep Learning">Deep Learning</div>
+         <div class="chip" data-tag="Python">Python</div>
+       </div>
+     </div>
+
+      <div class="past-card" data-type="hackathon" data-location="on-campus" data-tags="AI/ML,Web3,IoT" data-date="2025-03-15">
         <!-- LEFT Gradient Panel -->
         <div class="past-left gradient-purple">
           <div class="past-left-content">
             <div class="past-icon">💻</div>
-            <h3>HackFest 2024</h3>
-            <p>March 2024</p>
+            <h3>HackFest 2025</h3>
+            <p>March 2025</p>
           </div>
         </div>
 
@@ -1131,7 +1373,9 @@
             AI, Web3, and IoT. Special guest judges from Google and Microsoft
             evaluated 45 innovative projects.
           </p>
-
+<div style="margin-bottom:0.8rem;">
+            <span class="fee-badge">Entry Fee: ₹99</span>
+          </div>
           <div class="past-stats">
             <div class="stat-box stat-purple">
               <h4>280</h4>
@@ -1161,13 +1405,13 @@
       </div>
 
       <!-- SECOND EVENT -->
-      <div class="past-card">
+      <div class="past-card" data-type="workshop" data-location="on-campus" data-tags="AI/ML,Deep Learning,Python" data-date="2025-09-10">
         <!-- LEFT GRADIENT PANEL -->
         <div class="past-left gradient-green">
           <div class="past-left-content">
             <div class="past-icon">🎓</div>
             <h3>ML Bootcamp</h3>
-            <p>September 2024</p>
+            <p>September 2025</p>
           </div>
         </div>
 
@@ -1179,6 +1423,9 @@
             hands-on projects, data preprocessing, model building, and
             evaluation. Mentored by industry experts.
           </p>
+           <div style="margin-bottom:0.8rem;">
+            <span class="fee-badge">Entry Fee: ₹149</span>
+          </div>
 
           <div class="past-stats">
             <div class="stat-box stat-purple">
@@ -1204,13 +1451,142 @@
       </div>
     </section>
 
+    
     <div id="theme-control"></div>
+
+   <!-- Search & Filter script (frontend-only) -->
+   <script>
+     (function(){
+     // Upcoming filters
+      const qInput = document.getElementById('eventSearch');
+      const typeSel = document.getElementById('eventType');
+      const locSel = document.getElementById('eventLocation');
+      const startInput = document.getElementById('eventStartDate');
+      const endInput = document.getElementById('eventEndDate');
+      const clearBtn = document.getElementById('clearFilters');
+      // scope upcoming chips only to .upcoming
+      const upcomingChips = Array.from(document.querySelectorAll('.upcoming .chip'));
+      const grid = document.querySelector('.events-grid');
+      const cards = grid ? Array.from(grid.querySelectorAll('.event-card')) : [];
+
+      // Past filters
+      const pastSearch = document.getElementById('pastSearch');
+      const pastStart = document.getElementById('pastStartDate');
+      const pastEnd = document.getElementById('pastEndDate');
+      const pastClear = document.getElementById('pastClear');
+      const pastType = document.getElementById('pastType');
+      const pastLocation = document.getElementById('pastLocation');
+      const pastCards = Array.from(document.querySelectorAll('.past-card'));
+      const pastChips = Array.from(document.querySelectorAll('.past-controls .chip'));
+
+       function normalize(s){ return (s||'').toLowerCase(); }
+
+       function applyFilters(){
+         const q = normalize(qInput.value.trim());
+         const type = typeSel.value;
+         const loc = locSel.value;
+         const activeTags = upcomingChips.filter(c=>c.classList.contains('active')).map(c=>c.dataset.tag.toLowerCase());
+         const startVal = startInput && startInput.value ? new Date(startInput.value) : null;
+        const endVal = endInput && endInput.value ? new Date(endInput.value) : null;
+        // normalize endVal to end of day for inclusive filtering
+        if(endVal) endVal.setHours(23,59,59,999);
+
+         cards.forEach(card=>{
+           const title = normalize(card.dataset.title);
+           const desc = normalize(card.dataset.desc);
+           const tags = (card.dataset.tags || '').toLowerCase();
+           const matchesQ = !q || title.includes(q) || desc.includes(q) || tags.includes(q);
+           const matchesType = type === 'all' || (card.dataset.type === type);
+           const matchesLoc = loc === 'any' || (card.dataset.location === loc);
+           const matchesTags = activeTags.length === 0 || activeTags.every(t => tags.includes(t));
+            // date filtering: if event has data-date, compare to range (if provided)
+          let matchesDate = true;
+          if(startVal || endVal){
+            const evDate = card.dataset.date ? new Date(card.dataset.date) : null;
+            if(!evDate) matchesDate = false;
+            else {
+              if(startVal && evDate < startVal) matchesDate = false;
+              if(endVal && evDate > endVal) matchesDate = false;
+            }
+          }
+          card.style.display = (matchesQ && matchesType && matchesLoc && matchesTags && matchesDate) ? '' : 'none';
+         });
+       }
+function applyPastFilters(){
+        const q = pastSearch ? normalize(pastSearch.value.trim()) : '';
+        const activeTags = pastChips.filter(c=>c.classList.contains('active')).map(c=>c.dataset.tag.toLowerCase());
+        const startVal = pastStart && pastStart.value ? new Date(pastStart.value) : null;
+        const endVal = pastEnd && pastEnd.value ? new Date(pastEnd.value) : null;
+        if(endVal) endVal.setHours(23,59,59,999);
+
+        pastCards.forEach(card=>{
+          const title = normalize(card.querySelector('.past-heading') ? card.querySelector('.past-heading').textContent : card.dataset.title);
+          const desc = normalize(card.querySelector('.past-desc') ? card.querySelector('.past-desc').textContent : card.dataset.desc);
+          const tags = (card.dataset.tags || '').toLowerCase(); // optional data-tags on past cards
+          const typeSelVal = pastType ? pastType.value : 'all';
+          const locSelVal = pastLocation ? pastLocation.value : 'any';
+          let matchesQ = !q || title.includes(q) || desc.includes(q) || tags.includes(q);
+          // date handling: try dataset.date or fallback to none
+          let matchesDate = true;
+          if((startVal || endVal) && card.dataset.date){
+            const evDate = new Date(card.dataset.date);
+            if(startVal && evDate < startVal) matchesDate = false;
+            if(endVal && evDate > endVal) matchesDate = false;
+          }
+          const matchesTags = activeTags.length === 0 || activeTags.every(t => tags.includes(t));
+          const matchesType = !pastType || typeSelVal === 'all' || (card.dataset.type === typeSelVal);
+          const matchesLoc = !pastLocation || locSelVal === 'any' || (card.dataset.location === locSelVal);
+          card.style.display = (matchesQ && matchesDate && matchesTags && matchesType && matchesLoc) ? '' : 'none';
+        });
+      }
+       // simple debounce
+       let debounceT;
+       function debounce(fn, wait=180){ clearTimeout(debounceT); debounceT = setTimeout(fn, wait); }
+
+       qInput.addEventListener('input', ()=>debounce(applyFilters));
+       typeSel.addEventListener('change', applyFilters);
+       locSel.addEventListener('change', applyFilters);
+       if(startInput) startInput.addEventListener('change', applyFilters);
+      if(endInput) endInput.addEventListener('change', applyFilters);
+       clearBtn.addEventListener('click', ()=>{
+         qInput.value=''; typeSel.value='all'; locSel.value='any'; applyFilters();
+         if(startInput) startInput.value=''; if(endInput) endInput.value='';
+       });
+       // chips: toggle active state
+      upcomingChips.forEach(c=>{
+        c.addEventListener('click', ()=>{
+          c.classList.toggle('active');
+          applyFilters();
+        });
+      });
+      // Past events listeners
+      if(pastSearch) pastSearch.addEventListener('input', ()=>debounce(applyPastFilters));
+      if(pastStart) pastStart.addEventListener('change', applyPastFilters);
+      if(pastEnd) pastEnd.addEventListener('change', applyPastFilters);
+      if(pastClear) pastClear.addEventListener('click', ()=>{ if(pastSearch) pastSearch.value=''; if(pastStart) pastStart.value=''; if(pastEnd) pastEnd.value=''; if(pastType) pastType.value='all'; if(pastLocation) pastLocation.value='any'; applyPastFilters(); });
+      if(pastType) pastType.addEventListener('change', applyPastFilters);
+      if(pastLocation) pastLocation.addEventListener('change', applyPastFilters);
+      // Past chips listeners
+      pastChips.forEach(c=>{
+        c.addEventListener('click', ()=>{
+          c.classList.toggle('active');
+          applyPastFilters();
+        });
+      });
+
+       // run once to ensure initial state
+       applyFilters();
+       applyPastFilters();
+     })();
+   </script>
+
 
     <script src="">
       // Theme Definitions configuration
       const themes = [
         { name: "dark-purple", color: "#a600ff", title: "Dark Purple" },
       ];
+
 
       const controlContainer = document.getElementById("theme-control");
 
